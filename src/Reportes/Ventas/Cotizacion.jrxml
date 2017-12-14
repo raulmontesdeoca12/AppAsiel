@@ -1,0 +1,555 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="612" pageHeight="792" whenNoDataType="AllSectionsNoDetail" columnWidth="544" leftMargin="34" rightMargin="34" topMargin="34" bottomMargin="34" uuid="8d6318ed-4e77-482d-b5e7-b21e09f08858">
+	<property name="ireport.zoom" value="1.4641000000000017"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="codcot" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+     cotizacion.`idcotizacion` AS cotizacion_idcotizacion,
+     cotizacion.`fecha` AS cotizacion_fecha,
+     cotizacion.`vencimiento` AS cotizacion_vencimiento,
+     cotizacion.`flete` AS cotizacion_flete,
+     cotizacion.`credito` AS cotizacion_credito,
+     cotizacion.`descuento_por` AS cotizacion_descuento_por,
+     cotizacion.`fk_cliente` AS cotizacion_fk_cliente,
+     cotizacion.`pre_total` AS cotizacion_pre_total,
+     cotizacion.`descuento` AS cotizacion_descuento,
+     cotizacion.`sub_total` AS cotizacion_sub_total,
+     cotizacion.`iva` AS cotizacion_iva,
+     cotizacion.`total` AS cotizacion_total,
+     detalles_cotizacion.`iddetalles_cotizacion` AS detalles_cotizacion_iddetalles_cotizacion,
+     detalles_cotizacion.`fk_producto` AS detalles_cotizacion_fk_producto,
+     detalles_cotizacion.`cant_prod` AS detalles_cotizacion_cant_prod,
+     detalles_cotizacion.`p_unitario` AS detalles_cotizacion_p_unitario,
+     detalles_cotizacion.`total_prod` AS detalles_cotizacion_total_prod,
+     detalles_cotizacion.`fk_cotizacion` AS detalles_cotizacion_fk_cotizacion,
+     producto.`idproducto` AS producto_idproducto,
+     producto.`descripcion_prod` AS producto_descripcion_prod,
+     clientes.`idclientes` AS clientes_idclientes,
+     clientes.`razon_social_cli` AS clientes_razon_social_cli,
+     clientes.`direccion_cli` AS clientes_direccion_cli,
+     clientes.`contacto_cli` AS clientes_contacto_cli,
+     clientes.`telefono_cli` AS clientes_telefono_cli,
+     datos_extras.`iva` AS datos_extras_iva,
+     cotizacion.`mostrar` AS cotizacion_mostrar
+FROM
+     `cotizacion` cotizacion INNER JOIN `detalles_cotizacion` detalles_cotizacion ON cotizacion.`idcotizacion` = detalles_cotizacion.`fk_cotizacion`
+     INNER JOIN `producto` producto ON detalles_cotizacion.`fk_producto` = producto.`idproducto`
+     INNER JOIN `clientes` clientes ON cotizacion.`fk_cliente` = clientes.`idclientes`,
+     `datos_extras` datos_extras
+WHERE
+     cotizacion.`idcotizacion` = $P{codcot}]]>
+	</queryString>
+	<field name="cotizacion_idcotizacion" class="java.lang.Integer"/>
+	<field name="cotizacion_fecha" class="java.sql.Date"/>
+	<field name="cotizacion_vencimiento" class="java.lang.Integer"/>
+	<field name="cotizacion_flete" class="java.lang.String"/>
+	<field name="cotizacion_credito" class="java.lang.String"/>
+	<field name="cotizacion_descuento_por" class="java.lang.String"/>
+	<field name="cotizacion_fk_cliente" class="java.lang.String"/>
+	<field name="cotizacion_pre_total" class="java.lang.Float"/>
+	<field name="cotizacion_descuento" class="java.lang.Float"/>
+	<field name="cotizacion_sub_total" class="java.lang.Float"/>
+	<field name="cotizacion_iva" class="java.lang.Float"/>
+	<field name="cotizacion_total" class="java.lang.Float"/>
+	<field name="detalles_cotizacion_iddetalles_cotizacion" class="java.lang.Integer"/>
+	<field name="detalles_cotizacion_fk_producto" class="java.lang.String"/>
+	<field name="detalles_cotizacion_cant_prod" class="java.lang.Integer"/>
+	<field name="detalles_cotizacion_p_unitario" class="java.lang.Float"/>
+	<field name="detalles_cotizacion_total_prod" class="java.lang.Float"/>
+	<field name="detalles_cotizacion_fk_cotizacion" class="java.lang.Integer"/>
+	<field name="producto_idproducto" class="java.lang.String"/>
+	<field name="producto_descripcion_prod" class="java.lang.String"/>
+	<field name="clientes_idclientes" class="java.lang.String"/>
+	<field name="clientes_razon_social_cli" class="java.lang.String"/>
+	<field name="clientes_direccion_cli" class="java.lang.String"/>
+	<field name="clientes_contacto_cli" class="java.lang.String"/>
+	<field name="clientes_telefono_cli" class="java.lang.String"/>
+	<field name="datos_extras_iva" class="java.lang.Integer"/>
+	<field name="cotizacion_mostrar" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="132" splitType="Stretch">
+			<staticText>
+				<reportElement x="264" y="36" width="49" height="20" uuid="903fb1ff-a498-40db-b53f-a6ceaeaf3394"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cliente :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="401" y="56" width="25" height="20" uuid="8d7eeb72-b482-4666-9e1c-5f0037a24d28"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tlf.:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="264" y="96" width="69" height="20" uuid="41678aaf-d8a8-49c9-8e02-277e2742afc3"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Dirección :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="264" y="6" width="88" height="20" uuid="55f5e826-2d4e-45e1-ba9b-b96070bf9a7e"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cotizacion N°-]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="264" y="76" width="59" height="20" uuid="3db215ec-3793-4d7e-a7a9-bf4b0575d43e"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Atención :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="264" y="56" width="29" height="20" uuid="d557434d-b042-4e98-86af-0a9522d3c606"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RIF.:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="438" y="6" width="46" height="20" uuid="7f728897-f75a-4df0-8dd5-1af38d5266ad"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="352" y="6" width="74" height="20" uuid="0b078c9e-3465-43a0-8808-0bf68c4bf74c"/>
+				<textElement verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cotizacion_idcotizacion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="484" y="6" width="52" height="20" uuid="99267f60-480a-4437-bad6-53075c51dd12"/>
+				<textElement verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cotizacion_fecha}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="298" y="56" width="103" height="20" uuid="16cb6ff2-da2f-4b57-8242-ee7ee29ac189"/>
+				<textElement verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cotizacion_fk_cliente}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="318" y="36" width="218" height="20" uuid="a6e4024e-29c5-405a-902e-2f1f4879dfb1"/>
+				<textElement verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{clientes_razon_social_cli}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="431" y="56" width="105" height="20" uuid="6010130f-d2af-4729-863f-aac36f6b3fd9"/>
+				<textElement verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{clientes_telefono_cli}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="328" y="76" width="208" height="20" uuid="97e6018f-2f99-486b-a920-5d667968e3a6"/>
+				<textElement verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{clientes_contacto_cli}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="338" y="96" width="198" height="20" uuid="cb5cbf78-e707-40e9-a7eb-dd7834e5db13"/>
+				<textElement verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{clientes_direccion_cli}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="0" y="0" width="264" height="132" uuid="4c4fee66-4444-49a3-8b4c-7c938da1e675"/>
+				<imageExpression><![CDATA["LogoConTitulo.png"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="33" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="544" height="33" uuid="e0c590a9-b6c7-44ed-81ac-ddaaefee1510"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Por el presente "Distribuidora Asiel 77 C.A." Tiene el agrado de someter a su consideración el siguiente presupuesto de nuestros productos y servicios, esperando que el mismo cumpla sus expectativas.]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="26" splitType="Stretch">
+			<rectangle>
+				<reportElement mode="Transparent" x="0" y="0" width="28" height="24" uuid="661ae89e-04c0-443f-a7c2-c2c8ac74e6bb"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="0" y="0" width="28" height="24" uuid="e001e56e-fdb0-4810-be0a-bbc373ad88a3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[#]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement mode="Transparent" x="464" y="0" width="80" height="24" uuid="074c4a0c-06ab-4334-a020-4ae1412b60b9"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="464" y="0" width="80" height="24" uuid="1ce96c1a-740b-40aa-b56e-d977dadc0a6a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement mode="Transparent" x="102" y="0" width="221" height="24" uuid="9470a6b0-cc3d-466a-abb6-6331f6ecf0b8"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="323" y="0" width="63" height="24" uuid="4168d30c-4d99-4ab2-9589-27e898fc76a0"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="386" y="0" width="78" height="24" uuid="3827f8dc-ba3b-45ca-916f-b465ee320bca"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="28" y="0" width="74" height="24" uuid="89ee2376-45e1-47ca-9695-89e4ffb29931"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="102" y="0" width="221" height="24" uuid="5cf94e4a-3dba-4b87-9041-1c9cc8cd9e4c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Descripción]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="384" y="0" width="80" height="24" uuid="513e34f1-2505-4337-9977-9eebfaf1800a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Precio]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="323" y="0" width="63" height="24" uuid="77be6241-5f5c-4d56-8e3d-a81402b9ea0d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cantidad]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="28" y="0" width="74" height="24" uuid="43b317d8-3a06-423a-8946-3f643663dc32"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Código]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<rectangle>
+				<reportElement mode="Transparent" x="102" y="0" width="221" height="21" uuid="c69157b2-044e-46e6-be9f-a3a8eaebcf74"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="0" y="0" width="28" height="21" uuid="df4b4baa-8a81-4264-90e5-8dd4d2c9a0f9"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="28" y="0" width="74" height="21" uuid="59ad099d-bb5e-4026-8dd6-1a09bce2a9e4"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="323" y="0" width="63" height="21" uuid="0f20846e-fa1b-4b9b-b9a9-7c196cd512f0"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="464" y="0" width="80" height="21" uuid="c55e4198-1341-43ff-8256-feb8872497b1"/>
+			</rectangle>
+			<textField>
+				<reportElement x="28" y="1" width="74" height="19" uuid="5fa8f3b8-3cc7-4f21-bacf-b6196861344b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{detalles_cotizacion_fk_producto}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="102" y="1" width="221" height="19" uuid="c7cd5043-692a-415b-8fa8-51c5abfe25f2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{producto_descripcion_prod}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="323" y="1" width="63" height="19" uuid="43835a85-aacb-4726-87fd-fe2417ed5ea1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{detalles_cotizacion_cant_prod}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="386" y="1" width="73" height="19" uuid="1bb30aef-d703-4a4d-8b1a-7fa608cf3190"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{detalles_cotizacion_p_unitario}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="464" y="1" width="75" height="19" uuid="df9de08f-c930-4501-bce6-99ed75192098"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{detalles_cotizacion_total_prod}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="386" y="0" width="78" height="21" uuid="482e6764-6b0d-4e9b-a741-4abc3bd48797"/>
+			</rectangle>
+			<textField>
+				<reportElement x="0" y="1" width="28" height="20" uuid="dab64a3a-4cb1-48b6-9cab-604bf3843eb1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="118">
+			<rectangle>
+				<reportElement mode="Transparent" x="386" y="60" width="78" height="15" uuid="ee326d51-7e39-4325-834e-3d8fc3bd7955">
+					<printWhenExpression><![CDATA[$F{cotizacion_mostrar}.equals(1)]]></printWhenExpression>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="387" y="60" width="78" height="15" uuid="576013b3-2384-45c9-a6f5-589aba972b3b">
+					<printWhenExpression><![CDATA[$F{cotizacion_mostrar}.equals(1)]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total General]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement mode="Transparent" x="464" y="60" width="80" height="15" uuid="6f8b3670-1a5f-4f6a-9dfa-1260b1b90998">
+					<printWhenExpression><![CDATA[$F{cotizacion_mostrar}.equals(1)]]></printWhenExpression>
+				</reportElement>
+			</rectangle>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="466" y="60" width="73" height="15" uuid="82758522-0dcb-4f76-b409-149a7564cd4b">
+					<printWhenExpression><![CDATA[$F{cotizacion_mostrar}.equals(1)]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cotizacion_total}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="386" y="30" width="78" height="15" uuid="9fd8975b-1551-4370-b3a3-aa3f7acf7009">
+					<printWhenExpression><![CDATA[$F{cotizacion_mostrar}.equals(1)]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="387" y="0" width="77" height="15" uuid="b020b1d9-562e-4263-a4da-462d74f2c355">
+					<printWhenExpression><![CDATA[$F{cotizacion_mostrar}.equals(1)]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sub-Total]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement mode="Transparent" x="386" y="15" width="78" height="15" uuid="a7b64459-8e5e-46bb-bad9-ddb78cf9f1f7">
+					<printWhenExpression><![CDATA[$F{cotizacion_mostrar}.equals(1)]]></printWhenExpression>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="386" y="45" width="78" height="15" uuid="a94050af-fefa-42af-ada6-bc78e40d2f7d">
+					<printWhenExpression><![CDATA[$F{cotizacion_mostrar}.equals(1)]]></printWhenExpression>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="386" y="30" width="78" height="15" uuid="a008afc8-a525-4914-90f3-5517de94000b">
+					<printWhenExpression><![CDATA[$F{cotizacion_mostrar}.equals(1)]]></printWhenExpression>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="386" y="14" width="38" height="16" uuid="ff9c83d8-ad15-40c5-9043-8d52b8e9afcd">
+					<printWhenExpression><![CDATA[$F{cotizacion_mostrar}.equals(1)]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Desc.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="397" y="45" width="24" height="15" uuid="c80de590-1b83-4639-ab4d-e344c34a5e9c">
+					<printWhenExpression><![CDATA[$F{cotizacion_mostrar}.equals(1)]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[IVA]]></text>
+			</staticText>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="466" y="30" width="73" height="15" uuid="4452d33b-d9a2-4f70-96c9-3034aeabe0e5">
+					<printWhenExpression><![CDATA[$F{cotizacion_mostrar}.equals(1)]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cotizacion_sub_total}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="430" y="15" width="29" height="15" uuid="b69a8d2b-119f-429d-9296-41d7cc65d4c9">
+					<printWhenExpression><![CDATA[$F{cotizacion_mostrar}.equals(1)]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cotizacion_descuento_por}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="466" y="45" width="73" height="15" uuid="5dc91161-2b01-4d1e-9304-c87bb4323fca">
+					<printWhenExpression><![CDATA[$F{cotizacion_mostrar}.equals(1)]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cotizacion_iva}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="438" y="45" width="17" height="15" uuid="b939852c-357e-433c-9781-a3b208e07208">
+					<printWhenExpression><![CDATA[$F{cotizacion_mostrar}.equals(1)]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[%]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="421" y="45" width="17" height="15" uuid="936cb4ba-65e5-436a-ade6-c13c3fa224e7">
+					<printWhenExpression><![CDATA[$F{cotizacion_mostrar}.equals(1)]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{datos_extras_iva}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="464" y="45" width="80" height="15" uuid="7bc0ecf8-e61a-400b-9f38-0c987266bfa7">
+					<printWhenExpression><![CDATA[$F{cotizacion_mostrar}.equals(1)]]></printWhenExpression>
+				</reportElement>
+			</rectangle>
+			<textField pattern="###0.00;-###0.00">
+				<reportElement x="466" y="15" width="73" height="15" uuid="34eb20ff-6c77-4de4-a847-6f29e2eb0fff">
+					<printWhenExpression><![CDATA[$F{cotizacion_mostrar}.equals(1)]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cotizacion_descuento}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="464" y="15" width="80" height="15" uuid="1cabc15c-508c-486d-9764-11ec02dc7589">
+					<printWhenExpression><![CDATA[$F{cotizacion_mostrar}.equals(1)]]></printWhenExpression>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="464" y="30" width="80" height="15" uuid="3a38bfce-abe6-4216-b3fd-b03e0bd83f4d">
+					<printWhenExpression><![CDATA[$F{cotizacion_mostrar}.equals(1)]]></printWhenExpression>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="464" y="0" width="80" height="15" uuid="696095ed-0e54-412f-ad5b-9b52b640fb1d">
+					<printWhenExpression><![CDATA[$F{cotizacion_mostrar}.equals(1)]]></printWhenExpression>
+				</reportElement>
+			</rectangle>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="466" y="0" width="73" height="15" uuid="1a750000-2e9b-47a0-82d4-3a7173d9816f">
+					<printWhenExpression><![CDATA[$F{cotizacion_mostrar}.equals(1)]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cotizacion_pre_total}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="544" height="24" uuid="e574a12f-3354-4bc7-956c-89cc5b50df90">
+					<printWhenExpression><![CDATA[$F{cotizacion_mostrar}.equals(0)]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Estos precios no incluyen IVA]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement mode="Transparent" x="386" y="0" width="78" height="15" uuid="bf487aa7-c52d-4047-a5d6-f600c17877fb">
+					<printWhenExpression><![CDATA[$F{cotizacion_mostrar}.equals(1)]]></printWhenExpression>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="10" y="62" width="139" height="17" uuid="92ceeea1-5ab9-44af-b665-5db4f4f744fe"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Condiciones de Pago:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="5" y="24" width="210" height="20" uuid="5bf3bf9b-34cd-4a7f-9965-4923c6589600"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Condiciones]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="45" width="139" height="17" uuid="a0440383-410c-428b-b826-800245b651d3"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Transporte :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="160" y="62" width="210" height="17" uuid="e12c5391-d473-425a-b3b5-351859cabe8c"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cotizacion_credito}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="160" y="45" width="210" height="17" uuid="1a40bc2c-147e-4c0c-a216-bacadf207307"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cotizacion_flete}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="77" width="139" height="17" uuid="ffb1d288-aa00-4465-ae2c-e0544bea40b0"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Validéz de Oferta :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="160" y="79" width="210" height="15" uuid="f6a86023-5b7d-475b-9e08-10abd311bd7d"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cotizacion_vencimiento}+" Días"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="219" y="98" width="151" height="20" uuid="844290fd-f21c-4f03-b304-fbf96af8fbfd"/>
+				<textElement>
+					<font size="14" isBold="true" isItalic="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA["Edificando Sueños"]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

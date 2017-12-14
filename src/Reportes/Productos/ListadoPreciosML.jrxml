@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="612" pageHeight="792" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.6105100000000012"/>
+	<property name="ireport.x" value="84"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[SELECT
+     producto.`idproducto` AS producto_idproducto,
+     producto.`descripcion_prod` AS producto_descripcion_prod,
+     producto.`precio_ml` AS producto_precio_ml,
+     producto.`iva_ml` AS producto_iva_ml,
+     producto.`precio_si_ml` AS producto_precio_si_ml
+FROM
+     `producto` producto
+ORDER BY 
+     idproducto asc]]>
+	</queryString>
+	<field name="producto_idproducto" class="java.lang.String"/>
+	<field name="producto_descripcion_prod" class="java.lang.String"/>
+	<field name="producto_precio_ml" class="java.math.BigDecimal"/>
+	<field name="producto_iva_ml" class="java.math.BigDecimal"/>
+	<field name="producto_precio_si_ml" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="114" splitType="Stretch">
+			<frame>
+				<reportElement x="0" y="-1" width="555" height="115"/>
+				<image>
+					<reportElement x="0" y="0" width="251" height="114"/>
+					<imageExpression><![CDATA["C:\\Users\\user\\Documents\\NetBeansProjects\\Obed77\\IMG\\LogoConTitulo.png"]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement x="251" y="10" width="293" height="57" forecolor="#0099FF"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="28"/>
+					</textElement>
+					<text><![CDATA[Listado de Precios ML]]></text>
+				</staticText>
+				<textField pattern="dd/MM/yyyy">
+					<reportElement x="337" y="67" width="207" height="29" forecolor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="18"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="12" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="25" splitType="Stretch">
+			<staticText>
+				<reportElement x="306" y="0" width="79" height="25" forecolor="#0099FF"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Precio]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="92" y="0" width="214" height="25" forecolor="#0099FF"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Descripción]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="0" width="90" height="25" forecolor="#0099FF"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ID Producto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="385" y="0" width="79" height="25" forecolor="#0099FF"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Iva]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="464" y="0" width="91" height="25" forecolor="#0099FF"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement x="2" y="0" width="90" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{producto_idproducto}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="92" y="0" width="214" height="20"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{producto_descripcion_prod}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="464" y="0" width="80" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{producto_precio_ml}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="385" y="0" width="79" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{producto_iva_ml}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="306" y="0" width="79" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{producto_precio_si_ml}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="19" width="555" height="1" forecolor="#00CCFF"/>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement x="2" y="0" width="532" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+</jasperReport>

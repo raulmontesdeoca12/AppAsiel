@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ListadoPrecios_subreport1" pageWidth="99" pageHeight="28" columnWidth="99" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="568c1ff7-c3cd-4eaf-9d07-270c3b2160d8">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT
+     sum(producto.`precio_si` *  producto.`cantidad_prod` ) AS suma,
+     producto.`idproducto` AS producto_idproducto,
+     producto.`precio_si` AS producto_precio_si,
+     producto.`cantidad_prod` AS producto_cantidad_prod
+FROM
+     `producto` producto]]>
+	</queryString>
+	<field name="suma" class="java.math.BigDecimal"/>
+	<detail>
+		<band height="20">
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="0" y="0" width="99" height="20" uuid="172ea44f-2a6d-4a36-a97c-254f819b515c"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{suma}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

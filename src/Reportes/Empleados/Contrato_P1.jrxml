@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Contrato_P1" language="groovy" pageWidth="612" pageHeight="792" whenNoDataType="AllSectionsNoDetail" columnWidth="442" leftMargin="85" rightMargin="85" topMargin="56" bottomMargin="85" uuid="6bc2cc94-e9db-4785-864f-caaf1828651a">
+	<property name="ireport.zoom" value="2.853116706110007"/>
+	<property name="ireport.x" value="160"/>
+	<property name="ireport.y" value="528"/>
+	<queryString>
+		<![CDATA[SELECT
+     datos_extra_contrato.`patrono` AS datos_extra_contrato_patrono,
+     datos_extra_contrato.`ci_patrono` AS datos_extra_contrato_ci_patrono,
+     empleados.`ci_empleado` AS empleados_ci_empleado,
+     empleados.`nombre` AS empleados_nombre,
+     empleados.`apellido` AS empleados_apellido,
+     empleados.`f_nac` AS empleados_f_nac,
+     empleados.`edad` AS empleados_edad,
+     empleados.`estado` AS empleados_estado,
+     empleados.`correo` AS empleados_correo,
+     empleados.`direccion` AS empleados_direccion,
+     empleados.`estatus` AS empleados_estatus,
+     cargos.`cargos` AS cargos_cargos,
+     contratos.`idcontratos` AS contratos_idcontratos,
+     contratos.`fecha_ingreso` AS contratos_fecha_ingreso,
+     contratos.`fecha_egreso` AS contratos_fecha_egreso,
+     contratos.`sueldo_inicial` AS contratos_sueldo_inicial,
+     contratos.`sueldo_final` AS contratos_sueldo_final,
+     contratos.`fk_horario` AS contratos_fk_horario,
+     contratos.`fk_empleado` AS contratos_fk_empleado,
+     contratos.`fk_cargo` AS contratos_fk_cargo,
+     contratos.`con_sueldo` AS contratos_con_sueldo,
+     contratos.`con_ticket` AS contratos_con_ticket,
+     contratos.`con_comision` AS contratos_con_comision,
+     contratos.`con_destajo` AS contratos_con_destajo
+FROM
+     `cargos` cargos INNER JOIN `contratos` contratos ON cargos.`cargos` = contratos.`fk_cargo`
+     INNER JOIN `empleados` empleados ON contratos.`fk_empleado` = empleados.`ci_empleado`,
+     `datos_extra_contrato` datos_extra_contrato]]>
+	</queryString>
+	<field name="datos_extra_contrato_patrono" class="java.lang.String"/>
+	<field name="datos_extra_contrato_ci_patrono" class="java.lang.String"/>
+	<field name="empleados_ci_empleado" class="java.lang.String"/>
+	<field name="empleados_nombre" class="java.lang.String"/>
+	<field name="empleados_apellido" class="java.lang.String"/>
+	<field name="empleados_f_nac" class="java.sql.Date"/>
+	<field name="empleados_edad" class="java.lang.Integer"/>
+	<field name="empleados_estado" class="java.lang.String"/>
+	<field name="empleados_correo" class="java.lang.String"/>
+	<field name="empleados_direccion" class="java.lang.String"/>
+	<field name="empleados_estatus" class="java.lang.String"/>
+	<field name="cargos_cargos" class="java.lang.String"/>
+	<field name="contratos_idcontratos" class="java.lang.Integer"/>
+	<field name="contratos_fecha_ingreso" class="java.sql.Date"/>
+	<field name="contratos_fecha_egreso" class="java.lang.String"/>
+	<field name="contratos_sueldo_inicial" class="java.lang.Float"/>
+	<field name="contratos_sueldo_final" class="java.lang.Float"/>
+	<field name="contratos_fk_horario" class="java.lang.String"/>
+	<field name="contratos_fk_empleado" class="java.lang.String"/>
+	<field name="contratos_fk_cargo" class="java.lang.String"/>
+	<field name="contratos_con_sueldo" class="java.lang.Object"/>
+	<field name="contratos_con_ticket" class="java.lang.Object"/>
+	<field name="contratos_con_comision" class="java.lang.Object"/>
+	<field name="contratos_con_destajo" class="java.lang.Object"/>
+	<variable name="CI" class="java.lang.String">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<variable name="intss" class="java.lang.Integer">
+		<initialValueExpression><![CDATA[2]]></initialValueExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="69" splitType="Stretch">
+			<image>
+				<reportElement x="-50" y="-24" width="169" height="93" uuid="2d5cc504-c35e-4773-a35d-83b809f735f0"/>
+				<imageExpression><![CDATA["C:\\Users\\user\\Documents\\NetBeansProjects\\Obed77\\IMG\\LogoConTitulo.png"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="442" height="30" uuid="b381029b-0a75-479c-bc20-a1cb58be12af"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Contrato de Trabajo]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="534" splitType="Stretch">
+			<staticText>
+				<reportElement x="28" y="0" width="162" height="26" uuid="76011a00-4a2e-4970-ab78-0ee321214003"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Serif" size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ Distribuidora Asiel 77 C.A.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="46" height="26" uuid="c048db89-34a3-4c76-b08c-23e73d34bb31"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Serif" size="13" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Entre]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="442" height="189" uuid="ccf4bd16-f615-4d14-ae2c-b9112535ab4a"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Serif" size="13" isBold="false"/>
+				</textElement>
+				<text><![CDATA[				     Constituida en Carrizal, conforme consta de asiento en el REGISTRO MERCANTIL TERCERO DE LA CIRCUNSCRIPCION JUDICIAL DEL DISTRITO CAPITAL DEL ESTADO BOLIVARIANO DE MIRANDA el día 18 de septiembre del año 2014 bajo el N° 84 del tomo A. Representada en este acto por
+de la cédula de identidad
+                     Y                                                                portador   de   la   cédula de
+identidad]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="158" y="67" width="89" height="17" uuid="c111ef96-04ba-4b2b-9776-ef0a319bbf93"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Serif" size="12" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{datos_extra_contrato_patrono}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="247" y="66" width="195" height="18" uuid="eb8367d3-77ea-48f9-864b-8f57c5b3ab0d"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Serif" size="13" isBold="false"/>
+				</textElement>
+				<text><![CDATA[de nacionalidad Venezolana portador]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="152" y="83" width="66" height="17" uuid="f6dcbdd7-462f-4942-9f87-ffcec23f3cab"/>
+				<textElement textAlignment="Center">
+					<font fontName="Serif" size="13" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{datos_extra_contrato_ci_patrono}+"."]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="133" y="83" width="15" height="17" uuid="1a2dbc20-507d-4c6f-a110-c3fc6d6625a1"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Serif" size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[N°]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="218" y="82" width="167" height="18" uuid="5b9b4195-19da-4296-8203-ee6cab96ab07"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Serif" size="13" isBold="false"/>
+				</textElement>
+				<text><![CDATA[ Quien adelante se denominará]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="398" y="82" width="19" height="18" uuid="372f1532-de61-4d67-80c4-81e3160987f8"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Serif" size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[EL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="99" width="67" height="17" uuid="be24f7c2-504d-462b-b286-79b2c4dc1856"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Serif" size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PATRONO]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="79" y="99" width="210" height="17" uuid="087a769a-bbf4-4655-9d0b-ad285d1fe7fa"/>
+				<textElement textAlignment="Center">
+					<font fontName="Serif" size="13" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{empleados_nombre}+" "+$F{empleados_apellido}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="50" y="115" width="15" height="17" uuid="0a4bc65a-8493-4ece-b4af-608b26ca3447"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Serif" size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[N°]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="65" y="115" width="89" height="17" uuid="b73317ae-ff28-41b3-98c5-5af89463a910"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Serif" size="12" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{empleados_ci_empleado}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<pageFooter>
+		<band height="18" splitType="Stretch">
+			<staticText>
+				<reportElement x="319" y="0" width="123" height="17" uuid="af78599d-32e3-4642-bddd-33d73f67f02d"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Página 1 de 1]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>
