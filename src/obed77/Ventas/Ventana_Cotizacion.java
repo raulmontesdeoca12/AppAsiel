@@ -1,6 +1,4 @@
-
 package obed77.Ventas;
-
 
 import BaseDeDatos.ConexionBD;
 import BaseDeDatos.Ventas.Gest_ventas;
@@ -47,176 +45,171 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.util.JRLoader;
 import static obed77.Ventas.Ventana_Facturar.tabla_producto;
 
-
 public class Ventana_Cotizacion extends javax.swing.JFrame {
-int exc,exp, ivapor,pedido;
-DefaultTableModel m;
-DefaultTableModel mp;
-Properties pp = new Properties();
-static float total;
-float sub_total;
-float ivam;
-float excento;
-float de;
-float pre_total;
-int cont_cant,idfact;
-int cod,dia,mes,anio;
-String nid;
-String fecha,estatus;
-Shape shape = null;
+
+    int exc, exp, ivapor, pedido;
+    DefaultTableModel m;
+    DefaultTableModel mp;
+    Properties pp = new Properties();
+    static float total;
+    float sub_total;
+    float ivam;
+    float excento;
+    float de;
+    float pre_total;
+    int cont_cant, idfact;
+    int cod, dia, mes, anio;
+    String nid;
+    String fecha, estatus;
+    Shape shape = null;
+
     public Ventana_Cotizacion() {
         initComponents();
-        shape = new RoundRectangle2D.Float(0,0,this.getWidth(),this.getHeight(),30,30);
+        shape = new RoundRectangle2D.Float(0, 0, this.getWidth(), this.getHeight(), 30, 30);
         AWTUtilities.setWindowShape(this, shape);
-        total=0;
-        sub_total=0;
-        ivam=0;
-        excento=0;
-        cont_cant=0;
+        total = 0;
+        sub_total = 0;
+        ivam = 0;
+        excento = 0;
+        cont_cant = 0;
         deshabilitarEdicion();
         limpiar();
         this.btn_imprimir.setVisible(false);
         cargarlabels();
     }
- @Override
+
+    @Override
     public Image getIconImage() {
         Image retValue = Toolkit.getDefaultToolkit().
                 getImage(ClassLoader.getSystemResource("Imagenes/LogoObed77.png"));
 
-
         return retValue;
     }
-    void habilitar()
-    {
+
+    void habilitar() {
         this.cbo_desc.setEnabled(false);
         this.btn_buscar_clie.setEnabled(true);
         this.btn_agregar_prod.setEnabled(true);
+        this.btn_agregar_todos.setEnabled(true);
         this.btn_cotizar.setEnabled(true);
     }
-     
-    void cargarlabels()
-    {
+
+    void cargarlabels() {
         //cargar numero de pedido
         int id, pid;
-        
-        try
-      {
-       
-        String sql = "SELECT * FROM cotizacion";
-        ConexionBD parametros = new ConexionBD();
-        Class.forName(parametros.getDriver());
-        Connection con = DriverManager.getConnection(parametros.getUrl(), parametros.getUser(), parametros.getPass());
-        Statement st= con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        ResultSet  rs = st.executeQuery(sql);
-        if(rs.last())
-        {
-            id=rs.getInt("idcotizacion");
-            pid=id+1;
-            nid=Integer.toString(pid);
-            System.out.println(""+nid);
-            
-            
-        }else{
-            nid="0"; 
+
+        try {
+
+            String sql = "SELECT * FROM cotizacion";
+            ConexionBD parametros = new ConexionBD();
+            Class.forName(parametros.getDriver());
+            Connection con = DriverManager.getConnection(parametros.getUrl(), parametros.getUser(), parametros.getPass());
+            Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            ResultSet rs = st.executeQuery(sql);
+            if (rs.last()) {
+                id = rs.getInt("idcotizacion");
+                pid = id + 1;
+                nid = Integer.toString(pid);
+                System.out.println("" + nid);
+
+            } else {
+                nid = "0";
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Ventana_Cotizacion.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Ventana_Cotizacion.class.getName()).log(Level.SEVERE, null, ex);
         }
-       
-      }catch(SQLException ex) {
+        //cargar fecha
+        Calendar cal = Calendar.getInstance();
+        anio = cal.get(Calendar.YEAR);
+        int mesi = cal.get(Calendar.MONTH);
+        int mest = mesi + 1;
+        mes = mest;
+        dia = cal.get(Calendar.DATE);
+
+        fecha = anio + "-" + mes + "-" + dia;
+        String ivas = null;
+        try {
+
+            String sql = "SELECT * FROM datos_extras";
+            ConexionBD parametros = new ConexionBD();
+            Class.forName(parametros.getDriver());
+            Connection con = DriverManager.getConnection(parametros.getUrl(), parametros.getUser(), parametros.getPass());
+            Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            ResultSet rs = st.executeQuery(sql);
+            if (rs.last()) {
+                ivapor = rs.getInt("iva");
+                ivas = rs.getString("iva");
+
+            } else {
+                JOptionPane.showMessageDialog(this, "Error...\n No se encuentra ningún dato", "Error", 1, null);
+            }
+            this.lab_numfact.setText(nid);
+            this.lab_fecha.setText(fecha);
+            this.lab_ivapor.setText(ivas);
+
+        } catch (SQLException ex) {
             Logger.getLogger(Ventana_Cotizacion.class.getName()).log(Level.SEVERE, null, ex);
-     } catch (ClassNotFoundException ex) {
+        } catch (ClassNotFoundException ex) {
             Logger.getLogger(Ventana_Cotizacion.class.getName()).log(Level.SEVERE, null, ex);
-       }
-      //cargar fecha
-      Calendar cal = Calendar.getInstance();
-      anio=cal.get(Calendar.YEAR);
-      int mesi=cal.get(Calendar.MONTH);
-      int mest=mesi+1;
-      mes=mest;
-      dia=cal.get(Calendar.DATE);
-      
-      fecha= anio+"-"+mes+"-"+dia;
-      String ivas = null;
-       try
-      {
-       
-        String sql = "SELECT * FROM datos_extras";
-        ConexionBD parametros = new ConexionBD();
-        Class.forName(parametros.getDriver());
-        Connection con = DriverManager.getConnection(parametros.getUrl(), parametros.getUser(), parametros.getPass());
-        Statement st= con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        ResultSet  rs = st.executeQuery(sql);
-        if(rs.last())
-        {
-           ivapor=rs.getInt("iva");
-           ivas=rs.getString("iva");
-            
-        }else{
-            JOptionPane.showMessageDialog(this,"Error...\n No se encuentra ningún dato","Error",1,null);
         }
-        this.lab_numfact.setText(nid);
-      this.lab_fecha.setText(fecha);
-      this.lab_ivapor.setText(ivas);
-       
-      }catch(SQLException ex) {
-            Logger.getLogger(Ventana_Cotizacion.class.getName()).log(Level.SEVERE, null, ex);
-     } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Ventana_Cotizacion.class.getName()).log(Level.SEVERE, null, ex);
-       }
-      
+
     }
 
-       
-  
+    void deshabilitarEdicion() {
+        this.txt_rif.setEditable(false);
+        this.txt_nombre_cliente.setEditable(false);
+        this.txt_telefono.setEditable(false);
+        this.txt_direccion.setEditable(false);
+    }
 
-  void deshabilitarEdicion()
-  {
-      this.txt_rif.setEditable(false);
-      this.txt_nombre_cliente.setEditable(false);
-      this.txt_telefono.setEditable(false);
-      this.txt_direccion.setEditable(false);
-  }
-      void limpiaTabla(){
-           
-               m = (DefaultTableModel) tabla_factura.getModel();
-               int a =m.getRowCount()-1;
-               while(a>=0)
-               m.removeRow(0);
-           
-       }
-  void limpiar()
-  {
+    void limpiaTabla() {
 
-      this.lab_excento.setText(null);
-      this.lab_subtotal.setText(null);
-      this.lab_iva.setText(null);
-      this.lab_valortotal.setText(null);
-      Ventana_Cotizacion.txt_rif.setText(null);
-      Ventana_Cotizacion.txt_nombre_cliente.setText(null);
-      Ventana_Cotizacion.txt_telefono.setText(null);
-      Ventana_Cotizacion.txt_direccion.setText(null);
-      this.spin_vencimiento.setValue(1);
-      this.cbo_flete.setSelectedItem("Cliente");
-      this.spin_credito.setValue(0);
-      this.cbo_desc.setSelectedItem("0%");
-      this.cbo_desc.setEnabled(true);
-      this.ch_mostrar.setSelected(true);
-      limpiaTabla();
-       
-  }
+        m = (DefaultTableModel) tabla_factura.getModel();
+        int a = m.getRowCount() - 1;
+        while (a >= 0) {
+            m.removeRow(0);
+        }
 
-  public static void validarcamposllenos()
-  {
-      String ci, rif;
-      rif=txt_rif.getText();
-      if(rif.isEmpty())
-      {
-          Ventana_Cotizacion.btn_agregar_prod.setEnabled(false);
-      }else
-      {
-           Ventana_Cotizacion.btn_agregar_prod.setEnabled(true);
-      }
-      
-  }
-   void validarBotones() {
+    }
+
+    void limpiar() {
+
+        this.lab_excento.setText(null);
+        this.lab_subtotal.setText(null);
+        this.lab_iva.setText(null);
+        this.lab_valortotal.setText(null);
+        Ventana_Cotizacion.txt_rif.setText(null);
+        Ventana_Cotizacion.txt_nombre_cliente.setText(null);
+        Ventana_Cotizacion.txt_telefono.setText(null);
+        Ventana_Cotizacion.txt_direccion.setText(null);
+        this.spin_vencimiento.setValue(1);
+        this.cbo_flete.setSelectedItem("Cliente");
+        this.spin_credito.setValue(0);
+        this.cbo_desc.setSelectedItem("0%");
+        this.cbo_desc.setEnabled(true);
+        this.ch_mostrar.setSelected(true);
+        limpiaTabla();
+
+    }
+
+    public static void validarcamposllenos() {
+        String ci, rif;
+        rif = txt_rif.getText();
+        if (rif.isEmpty()) {
+            Ventana_Cotizacion.btn_agregar_todos.setEnabled(false);
+            Ventana_Cotizacion.btn_agregar_prod.setEnabled(false);
+
+        } else {
+            Ventana_Cotizacion.btn_agregar_todos.setEnabled(true);
+            Ventana_Cotizacion.btn_agregar_prod.setEnabled(true);
+        }
+
+    }
+
+    void validarBotones() {
         int filasel;
         String cant;
         try {
@@ -231,12 +224,11 @@ Shape shape = null;
                 this.btn_aceptar.setEnabled(false);
             }
 
-
         } catch (Exception e) {
         }
     }
-   
-  void validarBotones2() {
+
+    void validarBotones2() {
         int filasel;
         try {
             filasel = tabla_factura.getSelectedRow();
@@ -245,452 +237,404 @@ Shape shape = null;
                 this.btn_remover_prod.setEnabled(true);
 
             } else {
-                 this.btn_remover_prod.setEnabled(false);
+                this.btn_remover_prod.setEnabled(false);
             }
-
 
         } catch (Exception e) {
         }
     }
-  void cargarproductos()
-  {
-      try {
-            if(this.rad_normal.isSelected())
-            {
-            String [] titulos={"Código","Descripción","Precio Nor.","Cant."};
-            String[] registros = new String[4];
-            mp = new DefaultTableModel(null,titulos){
-                 @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;}
-            };
-            String sql;
-            ConexionBD parametros = new ConexionBD();
-            Class.forName(parametros.getDriver());
-            Connection con = DriverManager.getConnection(parametros.getUrl(), parametros.getUser(), parametros.getPass());
-            sql = "SELECT * FROM producto WHERE estatus_prod = 'Activo'  order by descripcion_prod asc";
-            Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            ResultSet rs = st.executeQuery(sql);
-            while (rs.next()) {
-            
 
-                registros[0] = rs.getString("idproducto");
-                registros[1] = rs.getString("descripcion_prod");
-                registros[2] = rs.getString("precio_si");
-                registros[3] = rs.getString("cantidad_prod");
-                mp.addRow(registros);
-            }
-            
-            tabla_producto.setModel(mp);
-            tabla_producto.getColumnModel().getColumn(0).setPreferredWidth(50);
-            tabla_producto.getColumnModel().getColumn(1).setPreferredWidth(100);
-            tabla_producto.getColumnModel().getColumn(2).setPreferredWidth(80);
-            tabla_producto.getColumnModel().getColumn(3).setPreferredWidth(30);
-            TableRowSorter modeloOrdenado = new TableRowSorter(mp);
-            tabla_producto.setRowSorter(modeloOrdenado);
-            modeloOrdenado.setRowFilter(RowFilter.regexFilter("(?i)"+txt_buscar.getText()));
-            tabla_producto.setRowSorter(modeloOrdenado);
+    void cargarproductos() {
+        try {
+            if (this.rad_normal.isSelected()) {
+                String[] titulos = {"Código", "Descripción", "Precio Nor.", "Cant."};
+                String[] registros = new String[4];
+                mp = new DefaultTableModel(null, titulos) {
+                    @Override
+                    public boolean isCellEditable(int row, int column) {
+                        return false;
+                    }
+                };
+                String sql;
+                ConexionBD parametros = new ConexionBD();
+                Class.forName(parametros.getDriver());
+                Connection con = DriverManager.getConnection(parametros.getUrl(), parametros.getUser(), parametros.getPass());
+                sql = "SELECT * FROM producto WHERE estatus_prod = 'Activo'  order by descripcion_prod asc";
+                Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                ResultSet rs = st.executeQuery(sql);
+                while (rs.next()) {
 
-            }else if (this.rad_mercado.isSelected())
-            {
-            double precio_si;
-            double precio_si_ml;
-            double rend;
-            String precio;
-            
-            String [] titulos={"Código","Descripción","Precio ML.","Cant."};
-            String[] registros = new String[4];
-            mp = new DefaultTableModel(null,titulos){
-                 @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;}
-            };
-            String sqlm;
-            ConexionBD parametros = new ConexionBD();
-            Class.forName(parametros.getDriver());
-            Connection con = DriverManager.getConnection(parametros.getUrl(), parametros.getUser(), parametros.getPass());
-            sqlm = "SELECT * FROM producto WHERE estatus_prod = 'Activo' order by descripcion_prod asc";
-            Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            ResultSet rs = st.executeQuery(sqlm);
-            while (rs.next()) {
-            
+                    registros[0] = rs.getString("idproducto");
+                    registros[1] = rs.getString("descripcion_prod");
+                    registros[2] = rs.getString("precio_si");
+                    registros[3] = rs.getString("cantidad_prod");
+                    mp.addRow(registros);
+                }
 
-                registros[0] = rs.getString("idproducto");
-                registros[1] = rs.getString("descripcion_prod");
-                
-                precio_si=rs.getDouble("precio_si");
-                precio_si_ml=precio_si/0.9;
-                rend=Math.rint(precio_si_ml*100)/100;
-                precio=String.valueOf(rend);
-                registros[2] = precio;
-                registros[3] = rs.getString("cantidad_prod");
-                mp.addRow(registros);
-            }
-            
-            tabla_producto.setModel(mp);
-            tabla_producto.getColumnModel().getColumn(0).setPreferredWidth(50);
-            tabla_producto.getColumnModel().getColumn(1).setPreferredWidth(100);
-            tabla_producto.getColumnModel().getColumn(2).setPreferredWidth(80);
-            tabla_producto.getColumnModel().getColumn(3).setPreferredWidth(30);
-            TableRowSorter modeloOrdenado = new TableRowSorter(mp);
-            tabla_producto.setRowSorter(modeloOrdenado);
-            modeloOrdenado.setRowFilter(RowFilter.regexFilter("(?i)"+txt_buscar.getText()));
-            tabla_producto.setRowSorter(modeloOrdenado);
+                tabla_producto.setModel(mp);
+                tabla_producto.getColumnModel().getColumn(0).setPreferredWidth(50);
+                tabla_producto.getColumnModel().getColumn(1).setPreferredWidth(100);
+                tabla_producto.getColumnModel().getColumn(2).setPreferredWidth(80);
+                tabla_producto.getColumnModel().getColumn(3).setPreferredWidth(30);
+                TableRowSorter modeloOrdenado = new TableRowSorter(mp);
+                tabla_producto.setRowSorter(modeloOrdenado);
+                modeloOrdenado.setRowFilter(RowFilter.regexFilter("(?i)" + txt_buscar.getText()));
+                tabla_producto.setRowSorter(modeloOrdenado);
+
+            } else if (this.rad_mercado.isSelected()) {
+                double precio_si;
+                double precio_si_ml;
+                double rend;
+                String precio;
+
+                String[] titulos = {"Código", "Descripción", "Precio ML.", "Cant."};
+                String[] registros = new String[4];
+                mp = new DefaultTableModel(null, titulos) {
+                    @Override
+                    public boolean isCellEditable(int row, int column) {
+                        return false;
+                    }
+                };
+                String sqlm;
+                ConexionBD parametros = new ConexionBD();
+                Class.forName(parametros.getDriver());
+                Connection con = DriverManager.getConnection(parametros.getUrl(), parametros.getUser(), parametros.getPass());
+                sqlm = "SELECT * FROM producto WHERE estatus_prod = 'Activo' order by descripcion_prod asc";
+                Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                ResultSet rs = st.executeQuery(sqlm);
+                while (rs.next()) {
+
+                    registros[0] = rs.getString("idproducto");
+                    registros[1] = rs.getString("descripcion_prod");
+
+                    precio_si = rs.getDouble("precio_si");
+                    precio_si_ml = precio_si / 0.9;
+                    rend = Math.rint(precio_si_ml * 100) / 100;
+                    precio = String.valueOf(rend);
+                    registros[2] = precio;
+                    registros[3] = rs.getString("cantidad_prod");
+                    mp.addRow(registros);
+                }
+
+                tabla_producto.setModel(mp);
+                tabla_producto.getColumnModel().getColumn(0).setPreferredWidth(50);
+                tabla_producto.getColumnModel().getColumn(1).setPreferredWidth(100);
+                tabla_producto.getColumnModel().getColumn(2).setPreferredWidth(80);
+                tabla_producto.getColumnModel().getColumn(3).setPreferredWidth(30);
+                TableRowSorter modeloOrdenado = new TableRowSorter(mp);
+                tabla_producto.setRowSorter(modeloOrdenado);
+                modeloOrdenado.setRowFilter(RowFilter.regexFilter("(?i)" + txt_buscar.getText()));
+                tabla_producto.setRowSorter(modeloOrdenado);
             }
         } catch (SQLException ex) {
             Logger.getLogger(Ventana_Cotizacion.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Ventana_Cotizacion.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-  }
-  void accbtnaceptar()
-  {
-      int fsel = tabla_producto.getSelectedRow();
-     
-      
-      try {
-       
-       float x,calcula,descuento = 0;
-       int cann=0;
-       int cans=0;
-       
-       boolean b=false;
-       String  codi,desc, prec, canp, imp,cant,descuento_s;
-       descuento_s=this.cbo_desc.getSelectedItem().toString();
-                switch (descuento_s) {
-                    case "0%":
-                        descuento=0;
-                        break;
-                    case "2%":
-                        descuento=(float)0.02;
-                        break;    
-                    case "5%":
-                        descuento=(float)0.05;
-                        break; 
-                    case "10%":
-                        descuento=(float)0.10;
-                        break;
-                }
-                
-                   
-                   codi=tabla_producto.getValueAt(fsel, 0).toString();
-                   desc=tabla_producto.getValueAt(fsel, 1).toString();
-                   prec=tabla_producto.getValueAt(fsel, 2).toString();
-                   cant = txt_cant.getText();
-                   cann=Integer.valueOf(cant);
 
-                   x=(Float.parseFloat(prec) * Integer.parseInt(cant));
-                   imp=String.valueOf(x);
-                   int ftotal = tabla_factura.getRowCount();
-                      for (int i = 0; i < ftotal; i++) {
-                         String code=tabla_factura.getValueAt(i, 0).toString(); 
-                         b = code.equals(codi);
+    }
 
-                          }               
-      
-       if(b==true)
-       {
-           this.jLabel21.setText("Atención...No puede volver a ingresar el mismo producto");
-       }
-            else{
-                  
-                 m=(DefaultTableModel)tabla_factura.getModel();
-                 String filaelemento[] = {codi,desc,cant,prec,imp};
-                 m.addRow(filaelemento);
-                 cont_cant=cont_cant+cann;
+    void accbtnaceptar() {
+        int fsel = tabla_producto.getSelectedRow();
 
-                 calcula=Float.parseFloat(imp);
-                 
-                 //calcula sub total
-                 pre_total=pre_total+calcula;
-                 
-                 //calcula descuento
-                 if (descuento==0)
-                 {
-                     de=0;
-                 }else
-                 {
-                     de=pre_total*descuento;
-                 }
-                 sub_total=pre_total-de;
-                 //calcula el iva del sub total
-                 ivam=(sub_total*ivapor)/100;
+        try {
 
-                 //valida la cantidad de productos
-                 
-                 //calcula el total
-                 total=(sub_total+ivam); 
-                 
-                 
+            float x, calcula, descuento = 0;
+            int cann = 0;
+            int cans = 0;
 
-                 //asignamos los valores;
-                 float subtotalr, ivar, excentor, valortotalr, descue,pre;
-                 subtotalr=(float) (Math.rint(sub_total*100)/100);
-                 ivar=(float) (Math.rint(ivam*100)/100);
-                 excentor=(float) (Math.rint(excento*100)/100);
-                 valortotalr=(float) (Math.rint(total*100)/100);
-                 descue=(float) (Math.rint(de*100)/100);
-                 pre=(float) (Math.rint(pre_total*100)/100);
-                 this.lab_subtotal.setText(subtotalr+"");
-                 this.lab_iva.setText(ivar+"");
-                 this.lab_excento.setText(excentor+"");
-                 this.lab_valortotal.setText(valortotalr+"");
-                 this.lab_descuento.setText(descue+"");
-                 this.lab_pretotal.setText(pre+"");
-                 int it = this.tabla_factura.getRowCount();
-                 this.lab_items.setText(it+""); 
-                 this.jLabel21.setText("Producto "+codi+" Ingresado Exitosamente...");
+            boolean b = false;
+            String codi, desc, prec, canp, imp, cant, descuento_s;
+            descuento_s = this.cbo_desc.getSelectedItem().toString();
+            switch (descuento_s) {
+                case "0%":
+                    descuento = 0;
+                    break;
+                case "2%":
+                    descuento = (float) 0.02;
+                    break;
+                case "5%":
+                    descuento = (float) 0.05;
+                    break;
+                case "10%":
+                    descuento = (float) 0.10;
+                    break;
+            }
+
+            codi = tabla_producto.getValueAt(fsel, 0).toString();
+            desc = tabla_producto.getValueAt(fsel, 1).toString();
+            prec = tabla_producto.getValueAt(fsel, 2).toString();
+            cant = txt_cant.getText();
+            cann = Integer.valueOf(cant);
+
+            x = (Float.parseFloat(prec) * Integer.parseInt(cant));
+            imp = String.valueOf(x);
+            int ftotal = tabla_factura.getRowCount();
+            for (int i = 0; i < ftotal; i++) {
+                String code = tabla_factura.getValueAt(i, 0).toString();
+                b = code.equals(codi);
 
             }
-       
-          
-       
-          
-      } catch (Exception e) {
-      }
-  }
-  
-  void remover()
-  {
-      String imp;
-      int cantidad;
-      float calc;
-      float descuento = 0;
-      int fsel = tabla_factura.getSelectedRow();
-      imp = tabla_factura.getValueAt(fsel, 4).toString();
-      cantidad=Integer.parseInt(tabla_factura.getValueAt(fsel,2).toString());
-    String descuento_s = this.cbo_desc.getSelectedItem().toString();
-                switch (descuento_s) {
-                    case "0%":
-                        descuento=0;
-                        break;
-                    case "2%":
-                        descuento=(float)0.02;
-                        break;    
-                    case "5%":
-                        descuento=(float)0.05;
-                        break; 
-                    case "10%":
-                        descuento=(float)0.10;
-                        break;
-                }
-      cont_cant=cont_cant-cantidad;
-      
-      calc=Float.parseFloat(imp);
-      
-      pre_total=pre_total-calc;
-      
-      if (descuento==0)
-      {
-          de=0;
-      }else
-      {
-          de=pre_total*descuento;
-      }
-      sub_total=pre_total-de;
-      ivam=(sub_total*ivapor)/100;
-      
-       if(cont_cant>=exc)
-       {
-         excento=(sub_total*exp)/100;
-       }else
-        {
-           excento=0;
-        }
-      total=(sub_total+ivam)-excento;
-      m=(DefaultTableModel)tabla_factura.getModel();
-      m.removeRow(fsel);
-      tabla_factura.setModel(m);
-      
-      float str=(float) (Math.rint(sub_total*100)/100);
-      float ivar=(float) (Math.rint(ivam*100)/100);
-      float exce=(float) (Math.rint(excento*100)/100);
-      float totr=(float) (Math.rint(total*100)/100);
-      float descue=(float) (Math.rint(de*100)/100);
-      float pre=(float) (Math.rint(pre_total*100)/100);
-      
-       this.lab_subtotal.setText(str+"");
-       this.lab_iva.setText(ivar+"");
-       this.lab_excento.setText(exce+"");
-       this.lab_valortotal.setText(totr+"");
-       this.lab_descuento.setText(descue+"");
-       this.lab_pretotal.setText(pre+"");
-       
-       int it = this.tabla_factura.getRowCount();
-       this.lab_items.setText(it+""); 
-      
-      
-  }
-  
- 
-  
 
-  void Cotizar()
-   {
-      
-       int fc=tabla_factura.getRowCount();
-       if(fc==0)
-       {
-           JOptionPane.showMessageDialog(this,"Error...\n La Cotizacion no posee productos","Atención",1,null);
-       }else{
-           int ad = 0;
-           String fechas,flete,credito,descuentopor,apartado,cliente;
-           int vencimiento,cred;
-           int most=0;
-           float pre,des,sub,iva,tot;
-           cod=Integer.parseInt(this.lab_numfact.getText());
-           cred=Integer.valueOf(this.spin_credito.getValue().toString());
-           
-           if (cred==-1)
-           {
-               credito="Anticipado";
-           }else
-           if(cred==0)
-           {
-               credito="Contado";
-           }else
-               
-           {
-               credito=cred+" Días";
-           }
-       
-           if (this.ch_mostrar.isSelected())
-           {
-               most=1;
-           }else
-           {
-               most=0;
-           }
-           apartado="no";
-           pre=Float.parseFloat(this.lab_pretotal.getText());
-           sub=Float.parseFloat(this.lab_subtotal.getText());
-           iva=Float.parseFloat(this.lab_iva.getText());
-           des=Float.parseFloat(this.lab_descuento.getText());
-           tot=Float.parseFloat(this.lab_valortotal.getText());
-           fechas=this.lab_fecha.getText();
-           String ven=this.spin_vencimiento.getValue().toString();
-           vencimiento=Integer.valueOf(ven);
-           flete=this.cbo_flete.getSelectedItem().toString();
-           descuentopor=Ventana_Cotizacion.cbo_desc.getSelectedItem().toString();
-           
-           cliente=Ventana_Cotizacion.txt_rif.getText();
-           try {
-               clase_cotizacion cot = new clase_cotizacion(cod,fechas,vencimiento,flete,credito,descuentopor,apartado,cliente,pre,des,sub,iva,tot,most);
-               Gest_ventas in = new Gest_ventas();
-               boolean r;
-               r=in.InsertarCot(cot);
-               if(r==false)
-               {
-                   llenardetalle();
-               }
-               
-           } catch(SQLException e)
-           {
-               JOptionPane.showMessageDialog(this,"Error...\n Consulte con su Gestor de Base de Datos"+e,"Error",0,null);
-               System.out.println("Error en Cotiz");
-           }
-           catch(ClassNotFoundException ex)
-           {
-               Logger.getLogger(Ventana_Cotizacion.class.getName()).log(Level.SEVERE,null,ex);
-           }
-       }
-        
-           
-                
-        
-       
-   }
-  public void guardarbdd()
-    {
-        int rsu=0;
-        FileInputStream fis;
-        int lon;
-      
-            try {
-                pp.load(new BufferedReader(new FileReader("ajustes.properties")));
-                String dir;
-                dir=pp.getProperty("directorio");
-                fis = new FileInputStream(dir+"/Obed77/PDF/Cotizaciones/Cotizacion_"+idfact+".pdf");
-                String sFichero = dir+"/Obed77/PDF/Cotizaciones/Cotizacion_"+idfact+".pdf";
-                File fichero = new File(sFichero);
-                lon=(int)fichero.length();
-                ConexionBD parametros = new ConexionBD();
-                Class.forName(parametros.getDriver());
-                Connection con = DriverManager.getConnection(parametros.getUrl(), parametros.getUser(), parametros.getPass());
-                String sql ="INSERT into documento_cot (iddocumento_cot,cot) values (?,?);";
-                PreparedStatement ps;
-                ps = con.prepareStatement(sql);
-                ps.setBlob(2, fis, lon);
-                ps.setInt(1, idfact);
-                rsu=ps.executeUpdate();
-                if (rsu==1)
-                {
-                    JOptionPane.showMessageDialog(this,"Documento Guardado en Base de Datos","Guardar",1,null);
+            if (b == true) {
+                this.jLabel21.setText("Atención...No puede volver a ingresar el mismo producto");
+            } else {
+
+                m = (DefaultTableModel) tabla_factura.getModel();
+                String filaelemento[] = {codi, desc, cant, prec, imp};
+                m.addRow(filaelemento);
+                cont_cant = cont_cant + cann;
+
+                calcula = Float.parseFloat(imp);
+
+                //calcula sub total
+                pre_total = pre_total + calcula;
+
+                //calcula descuento
+                if (descuento == 0) {
+                    de = 0;
+                } else {
+                    de = pre_total * descuento;
                 }
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(Ventana_Cotizacion.class.getName()).log(Level.SEVERE, null, ex);
+                sub_total = pre_total - de;
+                //calcula el iva del sub total
+                ivam = (sub_total * ivapor) / 100;
+
+                //valida la cantidad de productos
+                //calcula el total
+                total = (sub_total + ivam);
+
+                //asignamos los valores;
+                float subtotalr, ivar, excentor, valortotalr, descue, pre;
+                subtotalr = (float) (Math.rint(sub_total * 100) / 100);
+                ivar = (float) (Math.rint(ivam * 100) / 100);
+                excentor = (float) (Math.rint(excento * 100) / 100);
+                valortotalr = (float) (Math.rint(total * 100) / 100);
+                descue = (float) (Math.rint(de * 100) / 100);
+                pre = (float) (Math.rint(pre_total * 100) / 100);
+                this.lab_subtotal.setText(subtotalr + "");
+                this.lab_iva.setText(ivar + "");
+                this.lab_excento.setText(excentor + "");
+                this.lab_valortotal.setText(valortotalr + "");
+                this.lab_descuento.setText(descue + "");
+                this.lab_pretotal.setText(pre + "");
+                int it = this.tabla_factura.getRowCount();
+                this.lab_items.setText(it + "");
+                this.jLabel21.setText("Producto " + codi + " Ingresado Exitosamente...");
+
+            }
+            validarBotones();
+        } catch (Exception e) {
+        }
+    }
+
+    void remover() {
+        String imp;
+        int cantidad;
+        float calc;
+        float descuento = 0;
+        int fsel = tabla_factura.getSelectedRow();
+        imp = tabla_factura.getValueAt(fsel, 4).toString();
+        cantidad = Integer.parseInt(tabla_factura.getValueAt(fsel, 2).toString());
+        String descuento_s = this.cbo_desc.getSelectedItem().toString();
+        switch (descuento_s) {
+            case "0%":
+                descuento = 0;
+                break;
+            case "2%":
+                descuento = (float) 0.02;
+                break;
+            case "5%":
+                descuento = (float) 0.05;
+                break;
+            case "10%":
+                descuento = (float) 0.10;
+                break;
+        }
+        cont_cant = cont_cant - cantidad;
+
+        calc = Float.parseFloat(imp);
+
+        pre_total = pre_total - calc;
+
+        if (descuento == 0) {
+            de = 0;
+        } else {
+            de = pre_total * descuento;
+        }
+        sub_total = pre_total - de;
+        ivam = (sub_total * ivapor) / 100;
+
+        if (cont_cant >= exc) {
+            excento = (sub_total * exp) / 100;
+        } else {
+            excento = 0;
+        }
+        total = (sub_total + ivam) - excento;
+        m = (DefaultTableModel) tabla_factura.getModel();
+        m.removeRow(fsel);
+        tabla_factura.setModel(m);
+
+        float str = (float) (Math.rint(sub_total * 100) / 100);
+        float ivar = (float) (Math.rint(ivam * 100) / 100);
+        float exce = (float) (Math.rint(excento * 100) / 100);
+        float totr = (float) (Math.rint(total * 100) / 100);
+        float descue = (float) (Math.rint(de * 100) / 100);
+        float pre = (float) (Math.rint(pre_total * 100) / 100);
+
+        this.lab_subtotal.setText(str + "");
+        this.lab_iva.setText(ivar + "");
+        this.lab_excento.setText(exce + "");
+        this.lab_valortotal.setText(totr + "");
+        this.lab_descuento.setText(descue + "");
+        this.lab_pretotal.setText(pre + "");
+
+        int it = this.tabla_factura.getRowCount();
+        this.lab_items.setText(it + "");
+
+    }
+
+    void Cotizar() {
+
+        int fc = tabla_factura.getRowCount();
+        if (fc == 0) {
+            JOptionPane.showMessageDialog(this, "Error...\n La Cotizacion no posee productos", "Atención", 1, null);
+        } else {
+            int ad = 0;
+            String fechas, flete, credito, descuentopor, apartado, cliente;
+            int vencimiento, cred;
+            int most = 0;
+            float pre, des, sub, iva, tot;
+            cod = Integer.parseInt(this.lab_numfact.getText());
+            cred = Integer.valueOf(this.spin_credito.getValue().toString());
+
+            if (cred == -1) {
+                credito = "Anticipado";
+            } else if (cred == 0) {
+                credito = "Contado";
+            } else {
+                credito = cred + " Días";
+            }
+
+            if (this.ch_mostrar.isSelected()) {
+                most = 1;
+            } else {
+                most = 0;
+            }
+            apartado = "no";
+            pre = Float.parseFloat(this.lab_pretotal.getText());
+            sub = Float.parseFloat(this.lab_subtotal.getText());
+            iva = Float.parseFloat(this.lab_iva.getText());
+            des = Float.parseFloat(this.lab_descuento.getText());
+            tot = Float.parseFloat(this.lab_valortotal.getText());
+            fechas = this.lab_fecha.getText();
+            String ven = this.spin_vencimiento.getValue().toString();
+            vencimiento = Integer.valueOf(ven);
+            flete = this.cbo_flete.getSelectedItem().toString();
+            descuentopor = Ventana_Cotizacion.cbo_desc.getSelectedItem().toString();
+
+            cliente = Ventana_Cotizacion.txt_rif.getText();
+            try {
+                clase_cotizacion cot = new clase_cotizacion(cod, fechas, vencimiento, flete, credito, descuentopor, apartado, cliente, pre, des, sub, iva, tot, most);
+                Gest_ventas in = new Gest_ventas();
+                boolean r;
+                r = in.InsertarCot(cot);
+                if (r == false) {
+                    llenardetalle();
+                }
+
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(this, "Error...\n Consulte con su Gestor de Base de Datos" + e, "Error", 0, null);
+                System.out.println("Error en Cotiz");
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(Ventana_Cotizacion.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (SQLException ex) {
-                Logger.getLogger(Ventana_Cotizacion.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-        Logger.getLogger(Ventana_Cotizacion.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
     }
-                    
+
+    public void guardarbdd() {
+        int rsu = 0;
+        FileInputStream fis;
+        int lon;
+
+        try {
+            pp.load(new BufferedReader(new FileReader("ajustes.properties")));
+            String dir;
+            dir = pp.getProperty("directorio");
+            fis = new FileInputStream(dir + "/Obed77/PDF/Cotizaciones/Cotizacion_" + idfact + ".pdf");
+            String sFichero = dir + "/Obed77/PDF/Cotizaciones/Cotizacion_" + idfact + ".pdf";
+            File fichero = new File(sFichero);
+            lon = (int) fichero.length();
+            ConexionBD parametros = new ConexionBD();
+            Class.forName(parametros.getDriver());
+            Connection con = DriverManager.getConnection(parametros.getUrl(), parametros.getUser(), parametros.getPass());
+            String sql = "INSERT into documento_cot (iddocumento_cot,cot) values (?,?);";
+            PreparedStatement ps;
+            ps = con.prepareStatement(sql);
+            ps.setBlob(2, fis, lon);
+            ps.setInt(1, idfact);
+            rsu = ps.executeUpdate();
+            if (rsu == 1) {
+                JOptionPane.showMessageDialog(this, "Documento Guardado en Base de Datos", "Guardar", 1, null);
+            }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Ventana_Cotizacion.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Ventana_Cotizacion.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Ventana_Cotizacion.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Ventana_Cotizacion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
-  void llenardetalle()
-  {
-      
-      String idfacts;
-      String idprod;
-      int cant_prod;
-      float total_prod;
-      float p_unitario;
- 
-      
-      //validar tabla
-      int fc = tabla_factura.getRowCount();
-      idfacts=this.lab_numfact.getText();
-      idfact=Integer.parseInt(this.lab_numfact.getText());
-        
-             try{
+
+    void llenardetalle() {
+
+        String idfacts;
+        String idprod;
+        int cant_prod;
+        float total_prod;
+        float p_unitario;
+
+        //validar tabla
+        int fc = tabla_factura.getRowCount();
+        idfacts = this.lab_numfact.getText();
+        idfact = Integer.parseInt(this.lab_numfact.getText());
+
+        try {
             Gest_ventas in = new Gest_ventas();
-       
+
             boolean p = false;
             for (int i = 0; i < fc; i++) {
-                
-                idprod=tabla_factura.getValueAt(i, 0).toString();
-                cant_prod=Integer.parseInt(tabla_factura.getValueAt(i, 2).toString());
-                total_prod=Float.parseFloat(tabla_factura.getValueAt(i, 4).toString());
-                p_unitario=Float.parseFloat(tabla_factura.getValueAt(i, 3).toString());
-                clase_cotizacion_det dped = new clase_cotizacion_det(idprod, cant_prod,idfact,p_unitario,total_prod);
-                
-                
-                p=in.InsertarDetCot(dped);
-               
-                
+
+                idprod = tabla_factura.getValueAt(i, 0).toString();
+                cant_prod = Integer.parseInt(tabla_factura.getValueAt(i, 2).toString());
+                total_prod = Float.parseFloat(tabla_factura.getValueAt(i, 4).toString());
+                p_unitario = Float.parseFloat(tabla_factura.getValueAt(i, 3).toString());
+                clase_cotizacion_det dped = new clase_cotizacion_det(idprod, cant_prod, idfact, p_unitario, total_prod);
+
+                p = in.InsertarDetCot(dped);
+
             }
-            if (p=false)
-            {
-                
-            }
-            else
-            {
-              try {
-                  pp.load(new BufferedReader(new FileReader("ajustes.properties")));
-                String dir;
-                dir=pp.getProperty("directorio");
-                ConexionBD parametros = new ConexionBD();
-                Class.forName(parametros.getDriver());
-                Connection con = DriverManager.getConnection(parametros.getUrl(), parametros.getUser(), parametros.getPass());
-                JasperReport Report = (JasperReport) JRLoader.loadObject("src/Reportes/Ventas/Cotizacion.jasper");
-                Map par = new HashMap();
-                par.clear(); 
-                par.put("codcot", idfact);
-                JasperPrint jPrint = JasperFillManager.fillReport(Report, par , con);
-                JasperPrintManager.printReport(jPrint, true);
-                JasperExportManager.exportReportToPdfFile( jPrint, dir+"/Obed77/PDF/Cotizaciones/Cotizacion_"+idfacts+".pdf");
+            if (p = false) {
+
+            } else {
+                try {
+                    pp.load(new BufferedReader(new FileReader("ajustes.properties")));
+                    String dir;
+                    dir = pp.getProperty("directorio");
+                    ConexionBD parametros = new ConexionBD();
+                    Class.forName(parametros.getDriver());
+                    Connection con = DriverManager.getConnection(parametros.getUrl(), parametros.getUser(), parametros.getPass());
+                    JasperReport Report = (JasperReport) JRLoader.loadObject("src/Reportes/Ventas/Cotizacion.jasper");
+                    Map par = new HashMap();
+                    par.clear();
+                    par.put("codcot", idfact);
+                    JasperPrint jPrint = JasperFillManager.fillReport(Report, par, con);
+                    JasperPrintManager.printReport(jPrint, true);
+                    JasperExportManager.exportReportToPdfFile(jPrint, dir + "/Obed77/PDF/Cotizaciones/Cotizacion_" + idfacts + ".pdf");
                 } catch (JRException ex) {
                     Logger.getLogger(Ventana_Cotizacion.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (FileNotFoundException ex) {
@@ -698,13 +642,11 @@ Shape shape = null;
                 } catch (IOException ex) {
                     Logger.getLogger(Ventana_Cotizacion.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                int op= JOptionPane.showConfirmDialog(this, "¿Imprimió Correctamente la Cotización?", "Imprimir", JOptionPane.YES_NO_OPTION);
-                if (op==0)
-              {
-                  guardarbdd();
-                  this.dispose();
-              }else
-                {
+                int op = JOptionPane.showConfirmDialog(this, "¿Imprimió Correctamente la Cotización?", "Imprimir", JOptionPane.YES_NO_OPTION);
+                if (op == 0) {
+                    guardarbdd();
+                    this.dispose();
+                } else {
                     this.btn_cotizar.setVisible(false);
                     this.btn_imprimir.setVisible(true);
                     this.btn_limpiar.setEnabled(false);
@@ -714,61 +656,154 @@ Shape shape = null;
                     this.spin_vencimiento.setEnabled(false);
                     this.btn_buscar_clie.setEnabled(false);
                     Ventana_Cotizacion.btn_agregar_prod.setEnabled(false);
+                    Ventana_Cotizacion.btn_agregar_todos.setEnabled(false);
                     Ventana_Cotizacion.btn_remover_prod.setEnabled(false);
                     this.ch_mostrar.setEnabled(false);
                 }
             }
-             
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Error...\n Consulte con su Gestor de Base de Datos" + e, "Error", 1, null);
+            System.out.println("Error en Guardar");
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Ventana_Cotizacion.class.getName()).log(Level.SEVERE, null, ex);
         }
-    
-    catch(SQLException e)
-            {
-                JOptionPane.showMessageDialog(this,"Error...\n Consulte con su Gestor de Base de Datos"+e,"Error",1,null);
-                System.out.println("Error en Guardar");
-            }
-         catch(ClassNotFoundException ex)
-            {
-                Logger.getLogger(Ventana_Cotizacion.class.getName()).log(Level.SEVERE,null,ex);
-            }
-      
-  }
-  public void imprimir()
-  {
-       String idfacts=String.valueOf(idfact);
-       try {
-           pp.load(new BufferedReader(new FileReader("ajustes.properties")));
-                String dir;
-                dir=pp.getProperty("directorio");
-                ConexionBD parametros = new ConexionBD();
-                Class.forName(parametros.getDriver());
-                Connection con = DriverManager.getConnection(parametros.getUrl(), parametros.getUser(), parametros.getPass());
-                JasperReport Report = (JasperReport) JRLoader.loadObject("src/Reportes/Ventas/Cotizacion.jasper");
-                Map par = new HashMap();
-                par.clear(); 
-                par.put("codcot", idfact);
-                JasperPrint jPrint = JasperFillManager.fillReport(Report, par , con);
-                JasperPrintManager.printReport(jPrint, true);
-                JasperExportManager.exportReportToPdfFile( jPrint, dir+"/Obed77/PDF/Cotizaciones/Cotizacion_"+idfacts+".pdf");
-                } catch (JRException ex) {
-                    Logger.getLogger(Ventana_Cotizacion.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (ClassNotFoundException ex) {
-        Logger.getLogger(Ventana_Cotizacion.class.getName()).log(Level.SEVERE, null, ex);
-    } catch (SQLException ex) {
-        Logger.getLogger(Ventana_Cotizacion.class.getName()).log(Level.SEVERE, null, ex);
-    } catch (IOException ex) {
-        Logger.getLogger(Ventana_Cotizacion.class.getName()).log(Level.SEVERE, null, ex);
+
     }
-                int op= JOptionPane.showConfirmDialog(this, "¿Imprimió Correctamente la Cotización?", "Imprimir", JOptionPane.YES_NO_OPTION);
-                if (op==0)
-              {
-                  guardarbdd();
-                  this.dispose();
-              }else
-                {
-                    
+
+    public void imprimir() {
+        String idfacts = String.valueOf(idfact);
+        try {
+            pp.load(new BufferedReader(new FileReader("ajustes.properties")));
+            String dir;
+            dir = pp.getProperty("directorio");
+            ConexionBD parametros = new ConexionBD();
+            Class.forName(parametros.getDriver());
+            Connection con = DriverManager.getConnection(parametros.getUrl(), parametros.getUser(), parametros.getPass());
+            JasperReport Report = (JasperReport) JRLoader.loadObject("src/Reportes/Ventas/Cotizacion.jasper");
+            Map par = new HashMap();
+            par.clear();
+            par.put("codcot", idfact);
+            JasperPrint jPrint = JasperFillManager.fillReport(Report, par, con);
+            JasperPrintManager.printReport(jPrint, true);
+            JasperExportManager.exportReportToPdfFile(jPrint, dir + "/Obed77/PDF/Cotizaciones/Cotizacion_" + idfacts + ".pdf");
+        } catch (JRException ex) {
+            Logger.getLogger(Ventana_Cotizacion.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Ventana_Cotizacion.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Ventana_Cotizacion.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Ventana_Cotizacion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        int op = JOptionPane.showConfirmDialog(this, "¿Imprimió Correctamente la Cotización?", "Imprimir", JOptionPane.YES_NO_OPTION);
+        if (op == 0) {
+            guardarbdd();
+            this.dispose();
+        } else {
+
+        }
+    }
+
+    void agregarTodosLosProductosActivos() {
+
+        try {
+
+            float x, calcula, descuento = 0;
+            int cann = 0;
+            int cans = 0;
+
+            boolean b = false;
+            String codi, desc, prec, canp, imp, cant, descuento_s;
+            double precio_si;
+            double precio_si_ml;
+            double rend;
+            descuento_s = this.cbo_desc.getSelectedItem().toString();
+            switch (descuento_s) {
+                case "0%":
+                    descuento = 0;
+                    break;
+                case "2%":
+                    descuento = (float) 0.02;
+                    break;
+                case "5%":
+                    descuento = (float) 0.05;
+                    break;
+                case "10%":
+                    descuento = (float) 0.10;
+                    break;
+            }
+
+            m = (DefaultTableModel) tabla_factura.getModel();
+            m.setRowCount(0);
+
+            String sqlm;
+            ConexionBD parametros = new ConexionBD();
+            Class.forName(parametros.getDriver());
+            Connection con = DriverManager.getConnection(parametros.getUrl(), parametros.getUser(), parametros.getPass());
+            sqlm = "SELECT * FROM producto WHERE estatus_prod = 'Activo' order by descripcion_prod asc";
+            Statement st = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            ResultSet rs = st.executeQuery(sqlm);
+            while (rs.next()) {
+
+                codi = rs.getString("idproducto");
+                desc = rs.getString("descripcion_prod");
+                cant = "1";
+                precio_si = rs.getDouble("precio_si");
+                precio_si_ml = precio_si / 0.9;
+                rend = Math.rint(precio_si_ml * 100) / 100;
+                prec = String.valueOf(rend);
+                x = (Float.parseFloat(prec) * Integer.parseInt(cant));
+                imp = String.valueOf(x);
+                String filaelemento[] = {codi, desc, cant, prec, imp};
+                m.addRow(filaelemento);
+
+                cont_cant = cont_cant + cann;
+
+                calcula = Float.parseFloat(imp);
+
+                //calcula sub total
+                pre_total = pre_total + calcula;
+
+                //calcula descuento
+                if (descuento == 0) {
+                    de = 0;
+                } else {
+                    de = pre_total * descuento;
                 }
-   }
-  
+                sub_total = pre_total - de;
+                //calcula el iva del sub total
+                ivam = (sub_total * ivapor) / 100;
+
+                //valida la cantidad de productos
+                //calcula el total
+                total = (sub_total + ivam);
+
+                //asignamos los valores;
+                float subtotalr, ivar, excentor, valortotalr, descue, pre;
+                subtotalr = (float) (Math.rint(sub_total * 100) / 100);
+                ivar = (float) (Math.rint(ivam * 100) / 100);
+                excentor = (float) (Math.rint(excento * 100) / 100);
+                valortotalr = (float) (Math.rint(total * 100) / 100);
+                descue = (float) (Math.rint(de * 100) / 100);
+                pre = (float) (Math.rint(pre_total * 100) / 100);
+                this.lab_subtotal.setText(subtotalr + "");
+                this.lab_iva.setText(ivar + "");
+                this.lab_excento.setText(excentor + "");
+                this.lab_valortotal.setText(valortotalr + "");
+                this.lab_descuento.setText(descue + "");
+                this.lab_pretotal.setText(pre + "");
+                int it = this.tabla_factura.getRowCount();
+                this.lab_items.setText(it + "");
+                this.jLabel21.setText("Productos Ingresados Exitosamente...");
+            }
+            validarBotones();
+        } catch (Exception e) {
+        } finally {
+            validarBotones();
+        }
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -814,6 +849,7 @@ Shape shape = null;
         btn_cotizar = new javax.swing.JButton();
         lab_items = new javax.swing.JLabel();
         jLabel23 = new javax.swing.JLabel();
+        btn_agregar_todos = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tabla_factura = new javax.swing.JTable();
         jLabel17 = new javax.swing.JLabel();
@@ -1109,7 +1145,7 @@ Shape shape = null;
         setTitle("Cotizar");
         setIconImage(getIconImage());
         setIconImages(getIconImages());
-        setMinimumSize(new java.awt.Dimension(910, 690));
+        setMinimumSize(new java.awt.Dimension(1024, 690));
         setUndecorated(true);
         setResizable(false);
         getContentPane().setLayout(null);
@@ -1320,10 +1356,31 @@ Shape shape = null;
         jPanel6.add(btn_cotizar, new org.netbeans.lib.awtextra.AbsoluteConstraints(790, 0, -1, -1));
 
         lab_items.setText("0");
-        jPanel6.add(lab_items, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 0, 20, 40));
+        jPanel6.add(lab_items, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 0, 90, 40));
 
         jLabel23.setText("Items: ");
-        jPanel6.add(jLabel23, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 0, -1, 40));
+        jPanel6.add(jLabel23, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 0, -1, 40));
+
+        btn_agregar_todos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Ventas/btn_facturar3.png"))); // NOI18N
+        btn_agregar_todos.setToolTipText("Agregar Nuevo Producto");
+        btn_agregar_todos.setBorder(null);
+        btn_agregar_todos.setBorderPainted(false);
+        btn_agregar_todos.setContentAreaFilled(false);
+        btn_agregar_todos.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btn_agregar_todos.setEnabled(false);
+        btn_agregar_todos.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Ventas/btn_facturar3.png"))); // NOI18N
+        btn_agregar_todos.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Ventas/btn_facturar3.png"))); // NOI18N
+        btn_agregar_todos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                btn_agregar_todosMouseReleased(evt);
+            }
+        });
+        btn_agregar_todos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_agregar_todosActionPerformed(evt);
+            }
+        });
+        jPanel6.add(btn_agregar_todos, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 0, -1, 45));
 
         tabla_factura.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -1423,10 +1480,10 @@ Shape shape = null;
         cbo_desc.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0%", "2%", "5%", "10%" }));
         cbo_desc.setOpaque(false);
 
-        spin_vencimiento.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(1), Integer.valueOf(1), null, Integer.valueOf(1)));
+        spin_vencimiento.setModel(new javax.swing.SpinnerNumberModel(1, 1, null, 1));
         spin_vencimiento.setOpaque(false);
 
-        spin_credito.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(0), Integer.valueOf(-1), null, Integer.valueOf(1)));
+        spin_credito.setModel(new javax.swing.SpinnerNumberModel(0, -1, null, 1));
         spin_credito.setOpaque(false);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
@@ -1473,7 +1530,7 @@ Shape shape = null;
                 .addComponent(cbo_desc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(ch_mostrar)
-                .addContainerGap(113, Short.MAX_VALUE))
+                .addContainerGap(233, Short.MAX_VALUE))
         );
         jPanel11Layout.setVerticalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1549,7 +1606,7 @@ Shape shape = null;
         );
 
         getContentPane().add(jPanel1);
-        jPanel1.setBounds(10, 11, 890, 640);
+        jPanel1.setBounds(10, 11, 1010, 640);
 
         jPanel7.setOpaque(false);
 
@@ -1585,29 +1642,29 @@ Shape shape = null;
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addGap(12, 12, 12)
                 .addComponent(jLabel15)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lab_descuento, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lab_descuento, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
                 .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lab_subtotal, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(2, 2, 2)
+                .addComponent(lab_subtotal, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel10)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lab_ivapor, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel14)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
-                .addComponent(lab_iva, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(25, 25, 25)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lab_iva, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel11)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lab_excento, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lab_excento, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel12)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lab_valortotal, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lab_valortotal, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1630,20 +1687,20 @@ Shape shape = null;
         );
 
         getContentPane().add(jPanel7);
-        jPanel7.setBounds(10, 650, 841, 30);
+        jPanel7.setBounds(10, 650, 1010, 30);
 
         jLabel22.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/FondoInsertar1200x900.png"))); // NOI18N
         getContentPane().add(jLabel22);
-        jLabel22.setBounds(0, 0, 980, 720);
+        jLabel22.setBounds(0, 0, 1050, 720);
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_aceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_aceptarActionPerformed
-    accbtnaceptar();
-    this.btn_aceptar.setEnabled(false);
-    this.txt_cant.setText(null);
+        accbtnaceptar();
+        this.btn_aceptar.setEnabled(false);
+        this.txt_cant.setText(null);
     }//GEN-LAST:event_btn_aceptarActionPerformed
 
     private void btn_cerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cerrarActionPerformed
@@ -1655,8 +1712,8 @@ Shape shape = null;
     }//GEN-LAST:event_txt_buscarActionPerformed
 
     private void txt_buscarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_buscarKeyReleased
-       cargarproductos();
-       btn_aceptar.setEnabled(false);
+        cargarproductos();
+        btn_aceptar.setEnabled(false);
     }//GEN-LAST:event_txt_buscarKeyReleased
 
     private void btn_mostrar_todoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_mostrar_todoMousePressed
@@ -1665,7 +1722,7 @@ Shape shape = null;
 
     private void btn_mostrar_todoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_mostrar_todoActionPerformed
         txt_buscar.setText("");
-       cargarproductos();
+        cargarproductos();
     }//GEN-LAST:event_btn_mostrar_todoActionPerformed
 
     private void tabla_productoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabla_productoMouseClicked
@@ -1682,36 +1739,31 @@ Shape shape = null;
     }//GEN-LAST:event_tabla_productoFocusLost
 
     private void txt_cantKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_cantKeyPressed
- validarBotones(); 
- int filasel;
-        try
-        {            
+        validarBotones();
+        int filasel;
+        try {
             filasel = this.tabla_producto.getSelectedRow();
 
-            if (filasel!=-1 && !this.txt_cant.getText().isEmpty() && evt.getKeyCode() == KeyEvent.VK_ENTER)
-            {
-                  accbtnaceptar();  
-                  this.txt_cant.setText(null);
-            }else
-            if(evt.getKeyCode() == KeyEvent.VK_ESCAPE)
-            {
-               ventana_prod.dispose(); 
+            if (filasel != -1 && !this.txt_cant.getText().isEmpty() && evt.getKeyCode() == KeyEvent.VK_ENTER) {
+                accbtnaceptar();
+                this.txt_cant.setText(null);
+            } else if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                ventana_prod.dispose();
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
         }// TODO add your handling code here:
     }//GEN-LAST:event_txt_cantKeyPressed
 
     private void txt_cantKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_cantKeyReleased
- validarBotones();        // TODO add your handling code here:
+        validarBotones();        // TODO add your handling code here:
     }//GEN-LAST:event_txt_cantKeyReleased
 
     private void ventana_prodWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_ventana_prodWindowOpened
-cargarproductos();        // TODO add your handling code here:
+        cargarproductos();        // TODO add your handling code here:
     }//GEN-LAST:event_ventana_prodWindowOpened
 
     private void btn_limpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_limpiarActionPerformed
-limpiar();
+        limpiar();
 
         // TODO add your handling code here:
     }//GEN-LAST:event_btn_limpiarActionPerformed
@@ -1721,7 +1773,7 @@ limpiar();
     }//GEN-LAST:event_tabla_facturaMouseReleased
 
     private void btn_cotizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cotizarActionPerformed
-     Cotizar();
+        Cotizar();
         // TODO add your handling code here:
     }//GEN-LAST:event_btn_cotizarActionPerformed
 
@@ -1755,24 +1807,33 @@ limpiar();
     }//GEN-LAST:event_btn_buscar_clieMouseReleased
 
     private void btn_cancelar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cancelar1ActionPerformed
-this.dispose();        // TODO add your handling code here:
+        this.dispose();        // TODO add your handling code here:
     }//GEN-LAST:event_btn_cancelar1ActionPerformed
 
     private void btn_imprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_imprimirActionPerformed
-imprimir();        // TODO add your handling code here:
+        imprimir();        // TODO add your handling code here:
     }//GEN-LAST:event_btn_imprimirActionPerformed
 
     private void rad_normalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rad_normalItemStateChanged
-cargarproductos();
-    this.txt_cant.setText(null);
-    this.btn_aceptar.setEnabled(false);        // TODO add your handling code here:
+        cargarproductos();
+        this.txt_cant.setText(null);
+        this.btn_aceptar.setEnabled(false);        // TODO add your handling code here:
     }//GEN-LAST:event_rad_normalItemStateChanged
 
     private void rad_mercadoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rad_mercadoItemStateChanged
-cargarproductos();
-    this.txt_cant.setText(null);
-    this.btn_aceptar.setEnabled(false);        // TODO add your handling code here:
+        cargarproductos();
+        this.txt_cant.setText(null);
+        this.btn_aceptar.setEnabled(false);        // TODO add your handling code here:
     }//GEN-LAST:event_rad_mercadoItemStateChanged
+
+    private void btn_agregar_todosMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_agregar_todosMouseReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_agregar_todosMouseReleased
+
+    private void btn_agregar_todosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_agregar_todosActionPerformed
+        agregarTodosLosProductosActivos();
+        this.btn_cotizar.setEnabled(true);        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_agregar_todosActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1814,6 +1875,7 @@ cargarproductos();
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JButton btn_aceptar;
     public static javax.swing.JButton btn_agregar_prod;
+    public static javax.swing.JButton btn_agregar_todos;
     public javax.swing.JButton btn_buscar_clie;
     javax.swing.JButton btn_cancelar1;
     public javax.swing.JButton btn_cerrar;
